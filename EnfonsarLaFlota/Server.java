@@ -13,8 +13,6 @@ public class Server implements Runnable {
   private static final Lock w = rwl.writeLock(); // lock d'escriptura
 
   public MySocket mySocket;
-  // public static boolean validUser = false; // boolean per si nom d'usuari
-  // introduit es valid
   public String nick;
 
   public Server(String nickName, MySocket mySocket) {

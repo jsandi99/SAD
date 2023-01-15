@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 
-
 public class Casella extends JButton {
     private boolean girada, barco;
 

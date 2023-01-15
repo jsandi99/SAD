@@ -65,7 +65,7 @@ public class Client {
                     JOptionPane.showMessageDialog(jocFrame, null, "Victoria", 1, image);
                   } else {
                     try {
-                      playSound("sons/bip.wav");
+                      playSound("sons/bip.wav"); // Si trobem vaixell, so "bip"
                     } catch (Exception e) {
                       e.printStackTrace();
                     }
@@ -73,7 +73,7 @@ public class Client {
                   }
                 } else {
                   try {
-                    playSound("sons/water1.wav");
+                    playSound("sons/water1.wav"); // Si no trobem vaixell, so d'aigua "water"
                   } catch (Exception e) {
                     e.printStackTrace();
                   }
@@ -150,22 +150,16 @@ public class Client {
     if (jocFrame.getTaulell().getCasella(x, y).isBarco()) {
       fillNext(x + dx, y + dy, dx, dy);
 
-      if (x > 0 && y > 0)
-        jocFrame.getTaulell().getCasella(x - 1, y - 1).setGirada(true);
-      if (y > 0)
-        jocFrame.getTaulell().getCasella(x, y - 1).setGirada(true);
-      if (x < 9 && y > 0)
-        jocFrame.getTaulell().getCasella(x + 1, y - 1).setGirada(true);
-      if (x > 0)
-        jocFrame.getTaulell().getCasella(x - 1, y).setGirada(true);
-      if (x < 9)
-        jocFrame.getTaulell().getCasella(x + 1, y).setGirada(true);
-      if (x > 0 && y < 9)
-        jocFrame.getTaulell().getCasella(x - 1, y + 1).setGirada(true);
-      if (y < 9)
-        jocFrame.getTaulell().getCasella(x, y + 1).setGirada(true);
-      if (x < 9 && y < 9)
-        jocFrame.getTaulell().getCasella(x + 1, y + 1).setGirada(true);
+      int[][] posicionesAdyacentes = { { x - 1, y - 1 }, { x, y - 1 }, { x + 1, y - 1 }, { x - 1, y }, { x + 1, y },
+          { x - 1, y + 1 }, { x, y + 1 }, { x + 1, y + 1 } };
+
+      for (int[] posicion : posicionesAdyacentes) {
+        int i = posicion[0];
+        int j = posicion[1];
+        if (i >= 0 && i <= 9 && j >= 0 && j <= 9) {
+          jocFrame.getTaulell().getCasella(i, j).setGirada(true);
+        }
+      }
     }
   }
 
@@ -177,5 +171,4 @@ public class Client {
     clip.open(ais);
     clip.start();
   }
-
 }
