@@ -34,6 +34,7 @@ public class Client {
         } else if (output == FINALPARTIDA) { // mostrar que ha perdut
           bloquejarJugador(true);
           jocFrame.getFooterPanel().getTextArea().setText("Has perdut!");
+          jocFrame.getFooterPanel().getTextArea().setEditable(false); 
           jocFrame.getFooterPanel().getTextArea().setBackground(Color.RED);
           jocFrame.getFooterPanel().setBackground(Color.RED);
           ImageIcon image = new ImageIcon("imatges/game-over.png");
@@ -59,6 +60,7 @@ public class Client {
                     mySocket.printNum(FINALPARTIDA);
                     jocFrame.getFooterPanel().getTextArea().setText("Has guanyat!");
                     jocFrame.getFooterPanel().getTextArea().setBackground(Color.GREEN);
+                    jocFrame.getFooterPanel().getTextArea().setEditable(false); 
                     jocFrame.getFooterPanel().setBackground(Color.GREEN);
                     ImageIcon image = new ImageIcon("imatges/winner.png");
                     JOptionPane.showMessageDialog(jocFrame, null, "Victoria", 1, image);
@@ -90,10 +92,12 @@ public class Client {
     if (!bloqueo) {
       jocFrame.getFooterPanel().getTextArea().setText("Es el teu torn");
       jocFrame.getFooterPanel().getTextArea().setBackground(Color.GREEN);
+      jocFrame.getFooterPanel().getTextArea().setEditable(false); 
       jocFrame.getFooterPanel().setBackground(Color.GREEN);
     } else {
       jocFrame.getFooterPanel().getTextArea().setText("No es el teu torn");
       jocFrame.getFooterPanel().getTextArea().setBackground(Color.RED);
+      jocFrame.getFooterPanel().getTextArea().setEditable(false); 
       jocFrame.getFooterPanel().setBackground(Color.RED);
     }
 
