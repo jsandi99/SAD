@@ -11,8 +11,9 @@ public class FooterPanel extends JPanel {
     text = new JTextArea();
     text.setBackground(Color.YELLOW);
     text.setFont(font);
-    this.add(text);
     text.setText("Decidiu qui comença primer i premeu un boto");
+    text.setEditable(false);    
+    this.add(text);    
   }  
 
   public JTextArea getTextArea(){

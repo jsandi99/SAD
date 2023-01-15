@@ -29,7 +29,6 @@ public class Client {
     new Thread(() -> { // Thread per llegir del servidor
       int output;
       while ((output = mySocket.readNum()) >= 0) {
-        System.out.println(output);
         if (output == TORNRIVAL) { // desbloquejar jugador
           bloquejarJugador(false);
         } else if (output == FINALPARTIDA) { // mostrar que ha perdut

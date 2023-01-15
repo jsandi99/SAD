@@ -11,10 +11,9 @@ public class HeaderPanel extends JPanel {
     text = new JTextArea();
     text.setBackground(Color.CYAN);
     text.setFont(font);
-
-    this.add(text);
-
     text.setText("Enfonsar la flota");
+    text.setEditable(false);
+    this.add(text);   
   }
 
   public JTextArea getTextArea(){
