@@ -6,20 +6,17 @@ import javax.swing.*;
 
 public class ChatFrame extends JFrame /* implements ActionListener */{
 
-  private JButton sendButton;
-  private JTextField textField;
-  private JPanel header;
-  private JTextArea convers;
-  private JPanel text;
-  private JLabel title;
+  // private JButton sendButton;
+  // private JTextField textField;
+  // private JPanel header;
+  // private JTextArea convers;
+  // private JPanel text;
+  // private JLabel title;
 
   private final CardLayout contentCardLayout;
   private final JPanel contentPanel;
   private ChatPanel chatPanel;
   private LoginPanel loginPanel;
-
-
-  // private LoginPanel loginPanel;
 
   public ChatFrame(){
     contentCardLayout = new CardLayout();
@@ -50,20 +47,20 @@ public class ChatFrame extends JFrame /* implements ActionListener */{
 }
 
 public void setupChatPanel(String nickname){
-  chatPanel = new ChatPanel("Bienvenido "+/* nickname +*/"!\n");
-    contentPanel.add(chatPanel, "3");
-    contentCardLayout.show(contentPanel, "3");
+  chatPanel = new ChatPanel("Benvingut "+ nickname + "!\n");
+  contentPanel.add(chatPanel, "3");
+  contentCardLayout.show(contentPanel, "3");
 
-    setTitle("Chat SAD");
-    contentPanel.validate();
-    contentPanel.repaint();
-    setResizable(true);
-    Dimension dim = new Dimension(700,700);
-    setSize(dim);
-    setLocationRelativeTo(null);
-    contentPanel.setPreferredSize(dim);
-    chatPanel.setPreferredSize(dim);
-    setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+  setTitle("Chat SAD");
+  contentPanel.validate();
+  contentPanel.repaint();
+  setResizable(true);
+  Dimension dim = new Dimension(700,700);
+  setSize(dim);
+  setLocationRelativeTo(null);
+  contentPanel.setPreferredSize(dim);
+  chatPanel.setPreferredSize(dim);
+  setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 }
 
 
@@ -139,9 +136,6 @@ public void setupChatPanel(String nickname){
   // public LoginPanel getLoginPanel(){
   //   return loginPanel;
   // }
-
-
-
 
   public ChatPanel getChatPanel() { return chatPanel;}
   public LoginPanel getLoginPanel() { return loginPanel;}

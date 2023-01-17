@@ -1,8 +1,11 @@
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import javax.swing.DefaultListModel;
 
 public class Server implements Runnable {
 
@@ -10,7 +13,9 @@ public class Server implements Runnable {
                                                                                     // (nick,socket)
   private static final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
   private static final Lock r = rwl.readLock(); // lock de lectura
-  private static final Lock w = rwl.writeLock(); // lock d'escriptura
+  private static final Lock w = rwl.writeLock(); // lock d'escriptur
+
+  private static ArrayList<String> usuaris;
 
   public MySocket mySocket;
   public static boolean validUser = false; // boolean per si nom d'usuari introduit es valid
@@ -19,43 +24,61 @@ public class Server implements Runnable {
   public Server(String nickName, MySocket mySocket) {
     this.mySocket = mySocket;
     this.nick = nickName;
+    usuaris = new ArrayList<String>();
   }
 
   public static void main(String[] args) {
     MyServerSocket server = null;
     try {
       server = new MyServerSocket(5000);
-
       MySocket clientSocket;
       String name;
 
-      while (true) {
-        clientSocket = server.accept();
+      clientSocket = server.accept();
+      name = clientSocket.readLine();
+      putClient(name, clientSocket); // afegim el nou socket al diccionari
+      usuaris.add(name);
+      new Thread(new Server(name, clientSocket)).start(); // nou thread del fill del servidor que aten al client nou
+      System.out.println("........ " + name + " s'ha unit al xat ........");
+      clientSocket.printLine("........ " + name + " t'has unit al xat ........");
 
-        while (!validUser) { // fins que no tinguem un nom d'usuari valid
-          clientSocket.printLine("Introdueix el nom d'usuari: ");
-          name = clientSocket.readLine();
-
-          if (usedNickName(name)) { // comprovem que no existeixi el nom dins del diccionari
-            clientSocket.printLine(" " + name + " ja existeix, escull un altre nom d'usuari: ");
-
-          } else {
-            putClient(name, clientSocket); // afegim el nou socket al diccionari
-            new Thread(new Server(name, clientSocket)).start(); // nou thread del fill del servidor que aten al client
-                                                                // nou
-            validUser = true;
-            clientSocket.printLine("........ " + name + " t'has unit al xat ........");
-            System.out.println("........ " + name + " s'ha unit al xat ........");
-          }
-        }
-        validUser = false;
-      }
     } catch (IOException e) {
       e.printStackTrace();
     } finally {
       server.close();
-      ;
     }
+ 
+    // try{
+    // while (true) {
+    // clientSocket = server.accept();
+
+    // while (!validUser) { // fins que no tinguem un nom d'usuari valid
+    // clientSocket.printLine("Introdueix el nom d'usuari: ");
+    // name = clientSocket.readLine();
+
+    // if (usedNickName(name)) { // comprovem que no existeixi el nom dins del
+    // diccionari
+    // clientSocket.printLine(" " + name + " ja existeix, escull un altre nom
+    // d'usuari: ");
+
+    // } else {
+    // putClient(name, clientSocket); // afegim el nou socket al diccionari
+    // new Thread(new Server(name, clientSocket)).start(); // nou thread del fill
+    // del servidor que aten al client
+    // // nou
+    // validUser = true;
+    // clientSocket.printLine("........ " + name + " t'has unit al xat ........");
+    // System.out.println("........ " + name + " s'ha unit al xat ........");
+    // }
+    // }
+    // validUser = false;
+    // }
+    // } catch (IOException e) {
+    // e.printStackTrace();
+    // } finally {
+    // server.close();
+    // ;
+    // }
   }
 
   @Override
@@ -98,6 +121,7 @@ public class Server implements Runnable {
     w.lock();
     try {
       clientsMap.remove(nickName); // borrem el socket del diccionari
+      usuaris.remove(nickName);
     } finally {
       w.unlock();
     }
