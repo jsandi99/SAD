@@ -60,7 +60,5 @@ public class MySocket extends Socket {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-
 }
