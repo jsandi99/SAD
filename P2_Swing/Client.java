@@ -1,40 +1,82 @@
 import java.io.IOException;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+
+import javax.swing.JOptionPane;
+
+// import java.io.BufferedReader;
+// import java.io.InputStreamReader;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Client {
 
   public static final int PORT = 5000;
+  private static ChatFrame chat;
+  private static MySocket mySocket;
+  private static String nickname;
 
   public static void main(String[] args) throws IOException {
-    MySocket mySocket = new MySocket("localhost", PORT);
+    mySocket = new MySocket("localhost", PORT);
+    chat = new ChatFrame();
 
-    new Thread(() -> { //Thread para leer de teclado y enviar hacia servidor
-     
-        String input;
-        
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-          try {
-            while ((input = in.readLine()) != null) {
-              mySocket.printLine(input);
-          }
-          
-          mySocket.close(); 
-        }catch(IOException e) {
-              e.printStackTrace();
-        }
+    iniciarBoto();
+
     
-    }).start(); 
-  
-    new Thread(() -> {  //Thread para leer del servidor y printar por pantalla
+  }
 
-        String output;
+  public static void iniciarBoto() {
+    chat.getLoginPanel().getJoinButton().addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent actionEvent) {
+            final String output = chat.getLoginPanel().getNicknameField().getText();
+            if (!output.isEmpty()) {
+              mySocket.printLine(output);
+              nickname = output;
+              //chat.getChatPanel().getUsersList().addElement(nickname);
+              chat.setupChatPanel(nickname);
+              iniciarBoto2();
+              new Thread(() -> { // Thread para leer del servidor y printar por pantalla
 
-        while ((output = mySocket.readLine()) != null) {  
-          System.out.println(output);
-      	}
+                String outputs;
+                while ((outputs = mySocket.readLine()) != null) {
+                  chat.getChatPanel().getChatText().append(outputs + "\n");
+                }
+              }).start();
+            }
+          }
+        });    
+  }
 
-    }).start();
+  public static void iniciarBoto2() {
+    chat.getChatPanel().getSendButton().addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent actionEvent) {
+            final String output = chat.getChatPanel().getMessageField().getText();
+            if (output.isEmpty()) {
+              JOptionPane.showMessageDialog(null,
+                  "No pots enviar un missatge buit!",
+                  "Missatge buit",
+                  JOptionPane.ERROR_MESSAGE);
+            } else {
+              mySocket.printLine(output);
+              chat.getChatPanel().getChatText().append(nickname + ": " + output + "\n");
+              chat.getChatPanel().getMessageField().setText("");
+            }
+          }
+        });
+  }
 
+  public static void disconnect(){
+    chat.getChatPanel().getDisconnectButton().addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent actionEvent) {
+            //chat.getChatPanel().getUsersList().removeElement(nickname);
+            mySocket.close();
+            chat.dispose();
+            System.exit(0);
+          }
+        });
   }
 }

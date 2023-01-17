@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -33,7 +34,7 @@ public class Server implements Runnable {
         clientSocket = server.accept();
 
         while (!validUser) { // fins que no tinguem un nom d'usuari valid
-          clientSocket.printLine("Nom d'usuari: ");
+          clientSocket.printLine("Introdueix el nom d'usuari: ");
           name = clientSocket.readLine();
 
           if (usedNickName(name)) { // comprovem que no existeixi el nom dins del diccionari
@@ -49,12 +50,12 @@ public class Server implements Runnable {
           }
         }
         validUser = false;
-
       }
     } catch (IOException e) {
       e.printStackTrace();
     } finally {
       server.close();
+      ;
     }
   }
 
@@ -119,4 +120,6 @@ public class Server implements Runnable {
     }
     System.out.println("........ " + nickName + " ha sortit del xat ........");
   }
+
+  public Set<String> getClientsMapList(){ return clientsMap.keySet();}
 }

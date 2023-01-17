@@ -11,7 +11,6 @@ public class MySocket extends Socket {
     BufferedReader buffReader;
     PrintWriter printWriter;
 
-
     public MySocket(Socket socket) {
 
         try {
